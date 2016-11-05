@@ -2,8 +2,9 @@ package com.recognai.hackathon
 
 import java.time.format.DateTimeFormatter
 
-import org.apache.spark.sql.{SQLContext, SparkSession}
-import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.commons.lang3.StringUtils
+import org.apache.spark.SparkConf
+import org.apache.spark.sql.SparkSession
 
 /**
   * Created by @frascuchon on 04/11/2016.
@@ -17,6 +18,7 @@ object Main extends App {
     sqrt(pow(a._1 - b._1, 2) + pow(a._2 - b._2, 2))
   }
 
+
   val session = SparkSession.builder()
     .appName("Data processing")
     .getOrCreate()
@@ -24,9 +26,9 @@ object Main extends App {
   val conf = new SparkConf().setAppName("Data processing")
   val sc = session.sparkContext
 
-  val pollutionPath = conf.get("pollution.data.path", "aiHackathon/data/test/contaminacion_subset.txt")
-  val trafficPath = conf.get("traffic.data.path", "aiHackathon/data/test/trafico_subset.txt")
-  val outputfilePath = conf.get("output.data.path", "pollution_data")
+  val pollutionPath = StringUtils.defaultIfBlank(args(0), "aiHackathon/data/test/contaminacion_subset.txt")
+  val trafficPath = StringUtils.defaultIfBlank(args(1), "aiHackathon/data/test/trafico_subset.txt")
+  val outputfilePath = StringUtils.defaultIfBlank(args(2), "pollution_data")
   val RATIO = conf.get("distance.ratio", "0.04").toDouble
 
   import session.implicits._
