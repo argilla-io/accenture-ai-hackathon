@@ -6,6 +6,8 @@ import org.apache.commons.lang3.StringUtils
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 
+import scala.util.Try
+
 /**
   * Created by @frascuchon on 04/11/2016.
   */
@@ -35,6 +37,8 @@ object Main extends App {
 
   val dateFormat = DateTimeFormatter.ofPattern("YYYY-MM-DD HH:mm:SS")
 
+  private def toDouble(value: String): Double = Try(value.toDouble).toOption.getOrElse(0.0)
+
   // Prepare pollution data
   val pollution = sc.textFile(pollutionPath)
     .map(line => {
@@ -42,7 +46,7 @@ object Main extends App {
 
       // id_estación latitud longitud easting northing fecha NO2 PM25 PM10 O3
       (fields(0).toLong, new Point(fields(1).toDouble, fields(2).toDouble), fields(5),
-        fields(6).toDouble, fields(6).toDouble, fields(6).toDouble, fields(6).toDouble)
+        toDouble(fields(6)), toDouble(fields(7)), toDouble(fields(8)), toDouble(fields(9)))
     })
     .toDS()
 
@@ -52,8 +56,8 @@ object Main extends App {
       val fields = line.split(",")
 
       //id_elemento tipo_elemento easting northing latitud longitud fecha intensidad ocupacion carga velocidad_media error muestras_periodo
-      (fields(0).toLong, new Point(fields(4).toDouble, fields(5).toDouble), fields(6), fields(7).toDouble,
-        fields(8).toDouble, fields(9).toDouble, fields(10).toDouble, fields(11), fields(12).toLong)
+      (fields(0).toLong, new Point(fields(4).toDouble, fields(5).toDouble), fields(6), toDouble(fields(7)),
+        toDouble(fields(8)), toDouble(fields(9)), toDouble(fields(10)), fields(11), fields(12).toLong)
     })
     .toDS()
     .cache()
