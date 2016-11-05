@@ -85,7 +85,11 @@ object Main extends App {
           distance,
           traffic._1, traffic._3, traffic._4, traffic._5, traffic._6, traffic._7, traffic._8, traffic._9)
     }
-    .rdd
-    .map(_.productIterator.mkString(","))
-    .saveAsTextFile(outputfilePath)
+    .write
+    .format("csv")
+    .save(outputfilePath)
+  /*.rdd
+  .map(_.productIterator.mkString(","))
+  .saveAsTextFile(outputfilePath)
+  */
 }
