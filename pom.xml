@@ -22,7 +22,7 @@
     <encoding>UTF-8</encoding>
     <scala.version>${scala.compat.version}.5</scala.version>
     <scala.compat.version>2.11</scala.compat.version>
-    <spark.version>1.6.0</spark.version>
+    <spark.version>2.0.1</spark.version>
     <spark-csv.version>1.5.0</spark-csv.version>
     <bigquery-connector.version>0.8.0-hadoop2</bigquery-connector.version>
   </properties>

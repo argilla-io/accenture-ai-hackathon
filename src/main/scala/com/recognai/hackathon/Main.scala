@@ -2,7 +2,7 @@ package com.recognai.hackathon
 
 import java.time.format.DateTimeFormatter
 
-import org.apache.spark.sql.SQLContext
+import org.apache.spark.sql.{SQLContext, SparkSession}
 import org.apache.spark.{SparkConf, SparkContext}
 
 /**
@@ -17,16 +17,19 @@ object Main extends App {
     sqrt(pow(a._1 - b._1, 2) + pow(a._2 - b._2, 2))
   }
 
+  val session = SparkSession.builder()
+    .appName("Data processing")
+    .getOrCreate()
+
   val conf = new SparkConf().setAppName("Data processing")
-  val sc = new SparkContext(conf)
-  val sqlContext = new SQLContext(sc)
+  val sc = session.sparkContext
 
   val pollutionPath = conf.get("pollution.data.path", "aiHackathon/data/test/contaminacion_subset.txt")
   val trafficPath = conf.get("traffic.data.path", "aiHackathon/data/test/trafico_subset.txt")
   val outputfilePath = conf.get("output.data.path", "pollution_data")
   val RATIO = conf.get("distance.ratio", "0.04").toDouble
 
-  import sqlContext.implicits._
+  import session.implicits._
 
   val dateFormat = DateTimeFormatter.ofPattern("YYYY-MM-DD HH:mm:SS")
 
